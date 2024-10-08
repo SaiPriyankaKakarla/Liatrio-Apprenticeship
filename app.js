@@ -7,6 +7,7 @@ app.get('/', (req, res) => {
     message: "My name is Sai Priyanka Kakarla",
     timestamp: Date.now() 
   };
+  res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(response)); 
 });
 
