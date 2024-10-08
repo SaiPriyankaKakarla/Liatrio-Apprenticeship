@@ -33,14 +33,18 @@ jobs:
       - name: Wait for container to start
         run: sleep 10
 
-      # Verify application functionality
-      - name: Verify Application Functionality
-        uses: liatrio/github-actions/apprentice-action@master
+      # Run local tests instead of using external test action
+      - name: Run Local Tests
+        run: |
+          # Install necessary dependencies
+          npm install axios chai
+          # Run the local test file
+          node tests/endpoint.test.js
 
       # Stop and remove the Docker container
       - name: Stop and Remove Docker container
         run: docker stop node-express-app && docker rm node-express-app
-        
+
       # Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
         run: docker push skakarla1/node-express-app:latest
