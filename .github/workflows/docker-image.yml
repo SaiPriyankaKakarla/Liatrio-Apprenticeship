@@ -23,11 +23,11 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t skakarla1/node-express-app:latest .
+        run: docker build -t skakarla1/node-app:latest .
 
       # Run the Docker container in the background
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app skakarla1/node-express-app:latest
+        run: docker run -d -p 80:80 --name node-app skakarla1/node-app:latest
 
       # Wait for container to start
       - name: Wait for container to start
@@ -36,15 +36,15 @@ jobs:
       # Run local tests instead of using external test action
       - name: Run Local Tests
         run: |
-          # Install necessary dependencies
-          npm install axios chai
-          # Run the local test file
-          node tests/endpoint.test.js
+          # Install all necessary dependencies
+          npm ci
+          # Run tests using the npm test command
+          npm test
 
       # Stop and remove the Docker container
       - name: Stop and Remove Docker container
-        run: docker stop node-express-app && docker rm node-express-app
+        run: docker stop node-app && docker rm node-app
 
       # Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
-        run: docker push skakarla1/node-express-app:latest
+        run: docker push skakarla1/node-app:latest

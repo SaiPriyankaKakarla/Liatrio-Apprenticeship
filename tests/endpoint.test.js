@@ -1,6 +1,7 @@
-const axios = require("axios");
-const expect = require("chai").expect;
-const dockerBridgeIP = "172.17.0.1";
+import axios from "axios";
+import { expect } from "chai";
+
+const dockerBridgeIP = "localhost";
 
 describe("Tests to the \"/\" endpoint", () => {
     it("should return a 200 status code", async () => {
