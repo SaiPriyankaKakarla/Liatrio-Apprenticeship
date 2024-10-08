@@ -25,10 +25,22 @@ jobs:
       - name: Build Docker image
         run: docker build -t skakarla1/node-express-app:latest .
 
+      # Run the Docker container in the background
+      - name: Run Docker container
+        run: docker run -d -p 80:80 --name node-express-app skakarla1/node-express-app:latest
+
+      # Wait for container to start
+      - name: Wait for container to start
+        run: sleep 10
+
       # Verify application functionality
       - name: Verify Application Functionality
         uses: liatrio/github-actions/apprentice-action@master
 
+      # Stop and remove the Docker container
+      - name: Stop and Remove Docker container
+        run: docker stop node-express-app && docker rm node-express-app
+        
       # Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
         run: docker push skakarla1/node-express-app:latest

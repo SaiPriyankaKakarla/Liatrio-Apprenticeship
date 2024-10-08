@@ -7,7 +7,7 @@ app.get('/', (req, res) => {
     message: "My name is Sai Priyanka Kakarla",
     timestamp: Date.now() 
   };
-  res.json(response); 
+  res.send(JSON.stringify(response)); 
 });
 
 app.listen(port, () => {
