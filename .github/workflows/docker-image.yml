@@ -49,7 +49,7 @@ jobs:
       # Verify application functionality using the provided test action
       - name: Verify Application Functionality
         id: verify-functionality
-        uses: liatrio/github-actions/apprentice-action@v1  
+        uses: liatrio/github-actions/apprentice-action@master  
         continue-on-error: true  
 
       # Handle known test failures
