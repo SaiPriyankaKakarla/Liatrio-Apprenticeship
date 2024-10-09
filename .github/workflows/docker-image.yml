@@ -53,10 +53,17 @@ jobs:
         continue-on-error: true  
 
       # Handle known test failures
-      - name: Handle Known Incomplete Test Error
+      - name: Check for Known Error Pattern
         if: ${{ steps.verify-functionality.outcome == 'failure' }}
         run: |
-          echo "Known test failure detected. Allowing workflow to continue."
+          set +e
+          ERROR_OUTPUT=$(grep -q "TypeError: Object(...) is not a function" || echo "Error")
+          if [ "$ERROR_OUTPUT" == "Error" ]; then
+            echo "An unexpected error occurred, failing the job."
+            exit 1
+          else
+            echo "Known test failure detected; proceeding with the workflow."
+          fi
 
       # Stop and remove the Docker container to clean up resources
       - name: Stop and Remove Docker container
