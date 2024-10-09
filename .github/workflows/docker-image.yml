@@ -5,65 +5,42 @@ on:
     branches:
       - main
 
-# Set minimal permissions for the workflow
-permissions:
-  contents: read
-
 jobs:
-  # Build the Docker image
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout the code from the repository
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Log in to Docker Hub using credentials stored in secrets
+      # Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      # Build the Docker image and tag it for Docker Hub
+      # Build the Docker image
       - name: Build Docker image
-        run: docker build -t skakarla1/node-app:latest .
+        run: docker build -t skakarla1/node-express-app:latest .
 
-  # Run tests on the Docker container
-  test:
-    runs-on: ubuntu-latest
-    needs: build  
-    steps:
-      # Checkout the code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Run the Docker container in the background to test its functionality
+      # Run the Docker container in the background
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-app skakarla1/node-app:latest
+        run: docker run -d -p 80:80 --name node-express-app skakarla1/node-express-app:latest
 
-      # Wait for the container to fully start
+      # Wait for container to start
       - name: Wait for container to start
         run: sleep 10
 
-      # Verify application functionality using the provided test action
+      # Verify application functionality
       - name: Verify Application Functionality
-        id: verify-functionality
-        uses: liatrio/github-actions/apprentice-action@master  
-        continue-on-error: true  
+        uses: liatrio/github-actions/apprentice-action@0b41561cca6822cc8d880fe0e49e7807a41fdf91
 
-      # Handle known test failures
-      - name: Check for Known Error Pattern
-        if: ${{ steps.verify-functionality.outcome == 'failure' }}
-        run: |
-          set +e
-          if grep -q "TypeError: Object(...) is not a function" <(echo "${{ steps.verify-functionality.outputs.result }}"); then
-            echo "Known test failure detected; proceeding with the workflow."
-          else
-            echo "An unexpected error occurred, failing the job."
-            exit 1
-          fi
-
-      # Stop and remove the Docker container to clean up resources
+      # Stop and remove the Docker container
       - name: Stop and Remove Docker container
-        run: docker stop node-app && docker rm node-app
+        run: docker stop node-express-app && docker rm node-express-app
+        
+      # Push Docker image to Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: docker push skakarla1/node-express-app:latest
