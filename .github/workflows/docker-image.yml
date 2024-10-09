@@ -37,22 +37,21 @@ jobs:
 
       # Verify application functionality
       - name: Verify Application Functionality
-        id: verify-functionality
         uses: liatrio/github-actions/apprentice-action@master
         continue-on-error: true
-        run: |
-          uses: liatrio/github-actions/apprentice-action@master | tee apprentice-test-output.log
 
-      # Check the log for known incomplete test errors
-      - name: Check for Known Incomplete Test Error
+      # Capture the output log for known errors
+      - name: Capture Log and Check for Known Incomplete Test Error
         if: always()
         run: |
+          # Check the log for known incomplete test error
           if grep -q "TypeError: Object(...) is not a function" apprentice-test-output.log; then
             echo "Known incomplete test error found, allowing workflow to continue."
           else
             echo "Unexpected test failure detected."
             exit 1
           fi
+
       # Stop and remove the Docker container
       - name: Stop and Remove Docker container
         run: docker stop node-app && docker rm node-app
