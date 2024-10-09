@@ -29,7 +29,7 @@ jobs:
 
       # Run the Docker container in the background
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-app skakarla1/node-express-app:latest
+        run: docker run -d -p 80:80 --name node-app skakarla1/node-app:latest
 
       # Wait for container to start
       - name: Wait for container to start
