@@ -23,35 +23,28 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t skakarla1/node-express-app:latest .
-
-      # Run the Docker container in the background
-      - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app skakarla1/node-express-app:latest
-
-      # Wait for container to start
-      - name: Wait for container to start
-        run: sleep 10
+        run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest .
 
       # Verify application functionality
       - name: Verify Application Functionality
         uses: liatrio/github-actions/apprentice-action@0b41561cca6822cc8d880fe0e49e7807a41fdf91
-
-      # Stop and remove the Docker container
-      - name: Stop and Remove Docker container
-        run: docker stop node-express-app && docker rm node-express-app
         
-      # Push Docker image to Docker Hub
-      - name: Push Docker image to Docker Hub
-        run: docker push skakarla1/node-express-app:latest
+      # Push Docker image to Google Container Registry
+      - name: Push Docker image to Google Container Registry
+        run: docker push gcr.io/${{ secrets.GCP_SA_KEY }}/node-express-app:latest
+
+      # Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_SA_KEY }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       # Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v0.4.0
-        with:
-          service: liatrio-apprenticeship
-          image: docker.io/skakarla1/node-express-app:latest
-          region: us-central1
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-        env:
-          PORT: 80
+        run: |
+          gcloud run deploy node-express-app \
+            --image gcr.io/${{ secrets.GCP_SA_KEY }}/node-express-app:latest \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
