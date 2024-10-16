@@ -25,10 +25,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          install_components: kubectl
 
-      # Configure Docker to use gcloud as a credential helper
-      - name: Configure Docker to use gcloud as a credential helper
+      # Configure Docker to use gcloud 
+      - name: Configure Docker to use gcloud
         run: gcloud auth configure-docker
 
       # Log in to Docker Hub
@@ -42,21 +41,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest .
 
-      # Run the Docker container in the background 
-      - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest
-
-      # Wait for container to start 
-      - name: Wait for container to start
-        run: sleep 10
-
       # Verify application functionality
       - name: Verify Application Functionality
         uses: liatrio/github-actions/apprentice-action@0b41561cca6822cc8d880fe0e49e7807a41fdf91
-
-      # Stop and remove the Docker container (optional for local testing)
-      - name: Stop and Remove Docker container
-        run: docker stop node-express-app && docker rm node-express-app
     
       # Push Docker image to Google Container Registry
       - name: Push Docker image to Google Container Registry
