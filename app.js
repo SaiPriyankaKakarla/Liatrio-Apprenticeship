@@ -5,7 +5,8 @@ const port = 80;
 app.get('/', (req, res) => {
   const response = {
     message: "My name is Sai Priyanka Kakarla",
-    timestamp: Date.now() 
+    timestamp: Date.now(),
+    deployed: "true",
   };
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(response)); 
