@@ -23,7 +23,7 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest .
+        run: docker build -t gcr.io/${{ secrets.GCP_SA_KEY }}/node-express-app:latest .
 
       # Verify application functionality
       - name: Verify Application Functionality
