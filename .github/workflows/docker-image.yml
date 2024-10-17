@@ -39,12 +39,11 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest .
+        run: docker build -t us-central1-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest .
 
       # Run the Docker container in the background 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
-
+        run: docker run -d -p 80:80 --name node-express-app us-central1-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
       # Wait for container to start 
       - name: Wait for container to start
         run: sleep 10
@@ -59,13 +58,13 @@ jobs:
     
       # Push Docker image to Google Container Registry
       - name: Push Docker image to Google Artifact Registry
-        run: docker push us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
+        run: docker push us-central1-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
 
       # Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
         run: |
          gcloud run deploy node-express-app \
-           --image us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest \
+           --image us-central1-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest \
            --platform managed \
            --region us-central1 \
            --allow-unauthenticated
