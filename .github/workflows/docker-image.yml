@@ -43,7 +43,7 @@ jobs:
 
       # Run the Docker container in the background 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/node-express-app:latest
+        run: docker run -d -p 80:80 --name node-express-app us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
 
       # Wait for container to start 
       - name: Wait for container to start
@@ -64,8 +64,8 @@ jobs:
       # Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
         run: |
-          gcloud run deploy node-express-app \
-            --image us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/node-express-app:latest \
-            --platform managed \
-            --region us-central1 \
-            --allow-unauthenticated
+         gcloud run deploy node-express-app \
+           --image us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest \
+           --platform managed \
+           --region us-central1 \
+           --allow-unauthenticated
