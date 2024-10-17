@@ -26,9 +26,9 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # Configure Docker 
-      - name: Configure Docker
-        run: gcloud auth configure-docker
+      # Configure Docker for Artifact Registry
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-docker.pkg.dev
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -39,11 +39,11 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest .
+        run: docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr.io/node-express-app:latest .
 
       # Run the Docker container in the background 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name node-express-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest
+        run: docker run -d -p 80:80 --name node-express-app us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr.io/node-express-app:latest
 
       # Wait for container to start 
       - name: Wait for container to start
@@ -58,14 +58,14 @@ jobs:
         run: docker stop node-express-app && docker rm node-express-app
     
       # Push Docker image to Google Container Registry
-      - name: Push Docker image to Google Container Registry
-        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest
+      - name: Push Docker image to Google Artifact Registry
+        run: docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr.io/node-express-app:latest
 
       # Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
         run: |
           gcloud run deploy node-express-app \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-express-app:latest \
+            --image us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gcr.io/node-express-app:latest \
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated
