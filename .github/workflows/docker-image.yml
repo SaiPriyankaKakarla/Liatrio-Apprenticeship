@@ -39,7 +39,7 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/node-express-app:latest .
+        run: docker build -t us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest .
 
       # Run the Docker container in the background 
       - name: Run Docker container
@@ -59,7 +59,7 @@ jobs:
     
       # Push Docker image to Google Container Registry
       - name: Push Docker image to Google Artifact Registry
-        run: docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/node-express-app:latest
+        run: docker push us-docker.pkg.dev/liatroclouddeployment/cloud-run-source-deploy/node-express-app:latest
 
       # Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
